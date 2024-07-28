@@ -13,6 +13,9 @@ import authRoutes from "./routes/auth.route.js"
 import connectMongoDB from "./db/connectMongoDB.js";
 
 dotenv.config(); // this is allow us to get this env variables
+const PORT=process.env.PORT||5000;
+const __dirname=path.resolve();
+console.log("dirname:",__dirname)
 const app = express();
 app.use(cors());
 app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
@@ -21,15 +24,18 @@ app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: fals
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/",(req,res)=>{
-      res.send("Server is ready")
-})
+
 
 app.use("/api/auth",authRoutes)
 app.use("/api/users",userRoutes);
 app.use("/api/explore",exploreRoutes);
 
-app.listen(5000,()=>{
-      console.log("Server start on http://localhost:5000")
+app.use(express.static(path.join(__dirname,"/frontend/dist")));
+app.get("*",(req,res)=>{
+      res.sendFile(path.join(__dirname,"frontend","dist","index.html"))
+})
+// http://localhost:5000 both run the client ans server 
+app.listen(PORT,()=>{
+      console.log(`Server start on http://localhost:${PORT}`)
       connectMongoDB();
 })
