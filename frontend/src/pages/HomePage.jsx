@@ -22,7 +22,7 @@ const HomePage = () => {
     try {
      
       // fetch username profile from backend
-      const res=await fetch(`http://localhost:5000/api/users/profile/${username}`)
+      const res=await fetch(`/api/users/profile/${username}`)
     const {repos,userProfile} = await res.json();
     setUserProfile(userProfile);
 
